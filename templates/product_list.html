@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Products</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td>Description</td>
+                <td>Price</td>
+                <td>Likes</td>
+            </tr>
+        </thead>
+        {% for product in product_list %}
+            <tr>
+                <td>
+                    <a href="{% url 'products:product_detail' product.slug %}">{{ product.name }}</a>
+                </td>
+                <td>
+                    {{ product.description }}
+                </td>
+                <td>
+                    ${{ product.price }}
+                </td>
+                <td>
+                    {{ product.likes.count }}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% if is_paginated %}
+        {% if page_obj.has_previous %}
+            <a href="?page={{ products.previous_page_number }}">previous</a>
+        {% endif %}
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+            {% endif %}
+
+    {% endif %}
+{% endblock content %}

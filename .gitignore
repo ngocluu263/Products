@@ -1,0 +1,8 @@
+*.sqlite3
+*.db
+*.pyc
+*.pyo
+.idea/
+*~
+*.dat
+env/
