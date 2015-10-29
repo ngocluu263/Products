@@ -1,4 +1,4 @@
-To start project enter below command to bash
+# To start project enter below command to bash
 
 $ git clone https://github.com/nickolamaz/Products.git
 
