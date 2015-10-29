@@ -20,7 +20,6 @@ from product import views
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.index, name='home'),
-    url(r'^accounts/login/', views.login_view, name='login'),
-    url(r'^accounts/logout/', views.logout_view, name='logout'),
+    url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^products/', include('product.urls', namespace='products')),
 ]

@@ -1,30 +1,31 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 
 {% block content %}
     <h1>Product details</h1>
     <h2>{{ product.name }}</h2>
     <p>{{ product.description }}</p>
     <h3>${{ product.price }}</h3>
-    <p>Likes: {{ product.likes.count }}</p>
-{#    {% for like in product.likes.all %}#}
-{#        {% if like.user.username != request.user.username %}#}
-            <form action="{% url 'products:like_product' product.slug %}" method="POST">{% csrf_token %}
-                <input type="submit" value="like" class="btn btn-success"/>
-            </form>
-{#        {% endif %}#}
-{#    {% endfor %}#}
+    <p>Likes: {{ product.likes }}</p>
+    {{ product.like.liked }}
+    {% if request.user.is_authenticated %}
+        <form action="{% url 'products:like_product' product.slug %}" method="POST">{% csrf_token %}
+            <input type="submit" value="like" class="btn btn-success"/>
+        </form>
+    {% endif %}
 
     <h4>Comments:</h4>
-    {% for comment in product.comments_set.all %}
+    {% for comment in product.get_comments %}
         <p>{{ comment.comment_txt }}</p>
     {% endfor %}
 
-    <form action="{% url 'products:add_comment' product.slug %}" method="post">
+    <form method="post">
         {% csrf_token %}
         <input type="hidden" id="{{ product.pk }}" name="product" value="{{ product.pk }}">
         <div class="form-group">
-            <label for="comment_txt">Put your feedback here</label>
-            <textarea name="comment_txt" id="comment_txt" cols="30" rows="10" class="form-control" required></textarea>
+            {{ form.comment_txt.errors}}
+            {{ form.comment_txt.label_tag }}
+            {{ form.comment_txt|attr:"class: form-control" }}
         </div>
         <input type="submit" value="Comment" class="btn btn-info">
     </form>

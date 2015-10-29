@@ -6,16 +6,16 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <td>Name</td>
-                <td>Description</td>
-                <td>Price</td>
-                <td>Likes</td>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Likes</th>
             </tr>
         </thead>
         {% for product in product_list %}
             <tr>
                 <td>
-                    <a href="{% url 'products:product_detail' product.slug %}">{{ product.name }}</a>
+                    <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
                 </td>
                 <td>
                     {{ product.description }}
@@ -24,10 +24,11 @@
                     ${{ product.price }}
                 </td>
                 <td>
-                    {{ product.likes.count }}
+                    {{ product.likes }}
                 </td>
             </tr>
         {% endfor %}
+        <a href=""></a>
     </table>
     {% if is_paginated %}
         {% if page_obj.has_previous %}
@@ -42,3 +43,28 @@
 
     {% endif %}
 {% endblock content %}
+
+{% block javascript %}
+    <script>
+        $('th').click(function(){
+            var table = $(this).parents('table').eq(0);
+            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()));
+            this.asc = !this.asc;
+            if (!this.asc){
+                rows = rows.reverse()
+            }
+            for (var i = 0; i < rows.length; i++){
+                table.append(rows[i])
+            }
+        });
+        function comparer(index) {
+            return function(a, b) {
+                var valA = getCellValue(a, index), valB = getCellValue(b, index);
+                return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB)
+            }
+        }
+        function getCellValue(row, index){
+            return $(row).children('td').eq(index).html()
+        }
+    </script>
+{% endblock %}
